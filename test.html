@@ -1,0 +1,904 @@
+<script>
+	// alert(location.search);
+	// document.write(tribonacci([1,1,1],10));
+  // document.write(findNb(24723578342962));
+
+  // document.write(isIsogram("moOse"));
+
+function sumTwoSmallestNumbers(numbers) {  
+  var min=numbers[0],smin=numbers[1];
+  for(var i=1;i<numbers.length;i++){
+    if(numbers[i]<min){
+      smin = min;
+      min = numbers[i];
+    }else if(numbers[i]<smin){
+      smin = numbers[i];
+    }
+  }
+  return min+smin;
+};
+function tribonacci(signature,n){
+  var trib = new Array();
+  trib[0]=signature[0];
+  trib[1]=signature[1];
+  trib[2]=signature[2];
+  for(var i=3;i<n;i++){
+    trib[i]=trib[i-1]+trib[i-2]+trib[i-3];
+  }
+  return trib;
+}
+
+function findNb(m) {
+    // your code[n(n+1)/2]2 = m
+    sq = Math.sqrt(m);
+    if(m==sq^2){
+      nn1 = sq*2;
+      sqq = Math.sqrt(nn1);
+      for(var i=1;i<sqq;i++){
+        if(i*(i+1)==nn1){
+          return i;
+        }
+      }
+    }
+    return (-1);
+}
+
+function isIsogram(str){
+  str = str.toLowerCase(str);
+  var az = /[a-z]*/;
+  if(str.match(az)){
+    if(str.length == 0){
+      return true;
+    }else{
+      var map = new Object();
+      for(var i=0;i<str.length;i++){
+        if(map[str[i]]==1){
+          return false;
+        }else{
+          map[str[i]]=1;
+        }
+      }
+      return true;
+    }
+
+  }else{
+    return false;
+  }
+}
+
+function getCount(str) {
+  var vowelsCount = 0;
+  for(var i=0;i<str.length;i++){
+    if (str.charAt(i).match(/[aeiou]/i)) {
+      vowelsCount++;
+    }
+  }  
+  return vowelsCount;
+}
+
+/* Should return ᐃ type:
+  0 : if ᐃ cannot be made with given sides
+  1 : acute ᐃ
+  2 : right ᐃ
+  3 : obtuse ᐃ
+*/
+function triangleType(a, b, c){
+  var numarr = [a,b,c];
+  var sortnum = numarr.sort(function(a,b){return a-b});
+  var max=sortnum[2],min=sortnum[0],mid=numarr[1];
+  if(min+mid<=max){
+    return 0;
+  }
+  else if(min*min+mid*mid>max*max){
+    return 1;
+  }
+  else if(min*min+mid*mid==max*max){
+    return 2;
+  }
+  else{
+    return 3;
+  }
+}
+
+function decodeMorse(morseCode){
+  var decode =[
+                'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                '1','2','3','4','5','6','7','8','9','0',
+                'AA','AR','AS','BK','BT','CT','SK','SOS',
+                '.',':',',',';','?','=',"'",'/','!','-','_','"','(',')','$','&','@','+'
+            ];
+  var encode =[
+                // letter
+                '.-','-...','-.-.','-..','.','..-.','--.','....','..','.---','-.-','.-..','--','-.','---','.--.','--.-','.-.','...','-','..-','...-','.--','-..-','-.--','--..',
+                // number 
+                '.----','..---','...--','....-','.....','-....','--...','---..','----.','-----',
+                // special charactor
+                '.-.-','.-.-.','.-...','-...-.-','-...-','-.-.-','...-.-','...---...',
+                // punctuation
+                '.-.-.-','---...','--..--','-.-.-.','..--..','-...-','.----.','-..-.','-.-.--','-....-','..--.-','.-..-.','-.--.','-.--.-','...-..-','.-...','.--.-.','.-.-.'
+            ];
+  var decodestr = "";
+  morseCode = morseCode.trim();
+  var words = morseCode.split('   ');
+  for(var i=0;i<words.length;i++){
+    var chars = words[i].split(" ");
+    for(var j=0;j<chars.length;j++){
+      if(encode.indexOf(chars[j])!=-1&&chars[j]!=""){
+        decodestr+=decode[encode.indexOf(chars[j])];
+      }      
+    }
+    if(i!=words.length-1){
+      decodestr+=" ";      
+    }
+
+  }
+  return decodestr;
+}
+
+
+function goodVsEvil(good, evil){
+  var goodWorth = [1,2,3,3,4,10];
+  var evilWorth = [1,2,2,2,3,5,10];
+  var goodArr = good.split(' ');
+  var evilArr = evil.split(' ');
+  var goodw=0,evilw=0;
+  for(var i=0;i<goodArr.length;i++){
+    goodw += goodArr[i]*goodWorth[i];
+  }
+  for(i=0;i<evilArr.length;i++){
+    evilw += evilArr[i]*evilWorth[i];
+  }
+  if(goodw == evilw){
+    return "Battle Result: No victor on this battle field";
+  }else if(goodw>evilw){
+    return "Battle Result: Good triumphs over Evil";
+  }else{
+    return  "Battle Result: Evil eradicates all trace of Good";
+  }
+}
+
+function dirReduc(arr){
+
+  for(var m=0;m<arr.length;m++){
+    m = reducPair(arr,m)-1;
+  }
+  return arr;
+}
+//当前项与下一项配合，若配上处理arr，向前移；若不配则向后移
+function reducPair(arr,i){
+  var o ={WEST:1,EAST:-1,NORTH:2,SOUTH:-2};
+  if (i<0) {
+    return 0;
+  };
+  if(o[arr[i]]+o[arr[i+1]]==0){
+    arr.splice(i,2);
+    return i-1;
+  }else{
+    return i+1;
+  }
+}
+
+/**
+ * Utility class for Harshad numbers (also called Niven numbers).
+ *
+ * @namespace Harshad
+ */
+var Harshad = ( function() {
+  'use strict';
+
+  return {
+    /**
+     * Returns true when the given number is a valid Harshad number.
+     *
+     * @param {Number} number The given number
+     * @returns {Boolean}
+     * @function Harshad.isValid
+     */
+    isValid: function( number ) {
+      var numIt = number;
+      var digits = new Array();
+      var remainder;
+      while(numIt!=0){
+        remainder = numIt%10;
+        digits.push(remainder);
+        numIt = parseInt(numIt/10);//可能是浮点，强制转整型
+      }
+      var sum = 0;
+      for(var i=0;i<digits.length;i++){
+        sum+=digits[i];
+      }
+      if(number%sum==0){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    /**
+     * Gets the next Harshad number after the given number.
+     *
+     * @param {Number} number The given number
+     * @returns {Number}
+     * @function Harshad.getNext
+     */
+    getNext: function( number ) {
+      var next = number+1;
+      while(!Harshad.isValid(next)){
+        next++;
+      }
+      return next;
+    },
+    /**
+     * Returns the suite of Harshad numbers, starting after a given number.
+     *
+     * @param {Number} count The number of elements to return
+     * @param {Number} start The number after which the serie should start;
+     *  defaults to 0
+     * @returns {Array}
+     * @function Harshad.getSerie
+     */
+    getSerie: function( count, start ) {
+      if(start==undefined){//可能只传一个参数，会超时
+        start=0;
+      }
+      var harshadSerie = new Array();
+      while(count>0){
+        start = Harshad.getNext(start)
+        harshadSerie.push(start)
+        count--;
+      }
+      return harshadSerie;
+    }
+  };
+
+} () );
+
+var fibonacci = (function(n) {
+  var mem = new Array();
+  return function fibo(n){
+    var fibonaccin_1,fibonaccin_2;
+    if(n==0 || n == 1){
+      mem[n]=n;
+      return n;
+    } 
+    if(mem[n]!=undefined){
+      return mem[n];
+    }      
+    if(mem[n-1]!=undefined){
+      fibonaccin_1 = mem[n-1];
+    }else{
+      fibonaccin_1 = fibo(n-1);
+    }
+    if(mem[n-2]!=undefined){
+      fibonaccin_2 = mem[n-2];
+    }else{
+      fibonaccin_2 = fibo(n-2);
+    }
+    mem[n] = fibonaccin_1+fibonaccin_2;
+    return fibonaccin_1 + fibonaccin_2;
+  };
+    
+}());
+
+// function dblLinear(n) {
+//   var dblseq = new Array();
+//   var base = new Array();
+//   dblseq[0] = base[0] = 1;
+//   var minbase = base[0];
+//   var minindex;
+//   var l2,l3;
+//   while(dblseq.length<n*3){
+//     minbase=base[0];
+//     minindex = 0;
+//     for(var i =1;i<base.length;i++){
+//       if(base[i]<minbase){
+//         minbase = base[i];
+//         minindex = i;
+//       }
+//     }
+//     base.splice(minindex,1);
+//     var l2 = minbase*2+1;
+//     var l3 = minbase*3+1;
+//     dblseq.push(l2,l3);
+//     base.push(l2,l3);
+//   }
+//   dblseq.sort( function(a,b){return a-b;});
+//    console.log("dblseq="+dblseq);
+//    // 去重复
+//   for(i=1;i<dblseq.length;i++){
+//     if(dblseq[i-1]==dblseq[i]){
+//       dblseq.splice(i,1);
+//     }
+//   }
+//   return dblseq[n];
+// }
+function dblLinear(n) {
+  var dblseq = new Array();
+  dblseq[0] = 1;
+  var insertindex;//2x+1 insert position
+  var flag = 0;//move in the seq front
+  var l2,l3;
+  while(true){
+    var l2 = dblseq[flag]*2+1;
+    var l3 = dblseq[flag]*3+1;
+    if(l2>dblseq[n]){
+      break;
+    }
+    for(insertindex =dblseq.length-1;;insertindex--){
+      if(dblseq[insertindex]==l2){//repeat not insert
+        break;
+      }else if(dblseq[insertindex]<l2){//insert in the right place
+        dblseq.splice(insertindex+1,0,l2);
+        break;
+      }
+    }
+    dblseq.push(l3);
+    flag++;
+  }
+  return dblseq[n];
+}
+function validParentheses(parens){
+  var pattern = /.*\(\).*/;
+  var pa = /\(\)/g;
+  while(pattern.test(parens)){
+    parens = parens.replace(pa,"");  //注意不赋值的话源字符串不变
+  }
+   if(parens.length==0){
+     return true;
+   }else{
+     return false;
+   }
+}
+
+function calc(expr) {
+  expr = expr.trim();
+  var oppat = /[\+\-\*\/]/;
+  var seq = expr.split(' ');
+  var result;
+  if(expr.length==0){
+    return 0;
+  }
+  for(var i = 0;i<seq.length&&i>=0;i++){
+    if(oppat.test(seq[i])){
+      if(seq[i]=="+"){
+        result = parseFloat(seq[i-2])+parseFloat(seq[i-1]);
+      }else if(seq[i]=="-"){
+        result = parseFloat(seq[i-2])-parseFloat(seq[i-1]);
+      }else if(seq[i]=="*"){
+        result = parseFloat(seq[i-2])*parseFloat(seq[i-1]);
+      }else {
+        result = parseFloat(seq[i-2]) / parseFloat(seq[i-1]);
+      }
+      i=i-2;
+      seq.splice(i,3,result);
+    }
+  }
+  return parseFloat(seq[seq.length-1]);
+}
+// 大数相加
+function sumStrings(a,b) { 
+  var aarr = new Array();
+  var barr = new Array();
+  var carr = new Array();
+  carr[0]=0;
+  var result = new Array();
+  var restr="";
+  for(var i=a.length-1;i>=0;i--){
+    aarr.push(Number(a[i]));
+  }
+  for(i=b.length-1;i>=0;i--){
+    barr.push(Number(b[i]));
+  }
+  for(i=0;i<aarr.length||i<barr.length;i++){
+    if(aarr[i]==undefined){
+      aarr[i]=0;
+    }
+    if(barr[i]==undefined){
+      barr[i]=0;
+    }
+    if(carr[i]==undefined){
+      carr[i]=0;
+    }
+    result[i]= parseInt((aarr[i]+barr[i]+carr[i])%10);
+    carr[i+1] = parseInt((aarr[i]+barr[i]+carr[i])/10);
+  }
+  if(carr[i]!=0){
+    restr = restr+carr[i];
+  }
+  for(i=i-1;i>=0;i--){
+    restr = restr+""+result[i];
+  }
+  while(restr.indexOf('0')==0){
+    restr = restr.subString(1);
+  }
+  return restr;
+}
+
+//和最大子序列
+var maxSequence = function(arr){
+  for(var i =0;i<arr.length;i++){
+    if(arr[i]>0){
+      arr.splice(0,i);//删除前面的负数
+      break;
+    }
+  }
+  for(i =arr.length-1;i>=0;i--){
+    if(arr[i]>0){
+      arr.splice(i+1,arr.length-i);//删除后面的负数
+      break;
+    }
+  }
+  if(arr.length==0){
+    return 0;
+  }
+  //连续的同号数累加
+  for(i=0;i<arr.length;){
+    if(arr[i]*arr[i+1]>=0){
+      arr.splice(i,2,arr[i]+arr[i+1]);
+    }else{
+      i++;
+    }
+  }
+  var sublen = 3,subsum=0,submax=0;
+//   console.log(":arr="+arr);
+  while(sublen<=arr.length){
+    
+    for(i=0;i<arr.length-sublen+1;){//基于正数
+      subsum=0;
+      submax =arr[i];
+      for(var j=i;j<i+sublen;j++){
+//         console.log(i+":j="+j);
+        subsum+=arr[j];
+        if(arr[j]>submax){
+          submax = arr[j];
+        }
+      }
+      console.log(i+":subsum="+subsum);
+      
+
+      if(subsum>=submax){
+        arr.splice(i,sublen,subsum);
+        console.log(sublen+":arr="+arr);
+        if(i>0){
+          i-=2;
+        }
+      }else{
+        i+=2;
+      }
+    }
+    sublen+=2;
+  }
+  var max = Math.max.apply(null, arr);
+  return max;
+}
+//调用链
+var add = function(first) {
+  var result = 0;
+  result+=first;
+    var addh = function(num) {
+        result+=num;
+        
+        return arguments.callee;
+    };
+    addh.valueOf = function(){//改成toString
+      return result;
+    }
+    return addh;
+};
+//正确的调用链
+function add(n){
+  var sum = n;
+  var temp = function(a){
+    sum+=a;
+    return arguments.callee;
+  };
+  temp.toString(){
+    return sum;
+  }
+  return temp;  
+};
+//通用进制转换
+var Alphabet = {
+  BINARY:        '01',
+  OCTAL:         '01234567',
+  DECIMAL:       '0123456789',
+  HEXA_DECIMAL:  '0123456789abcdef',
+  ALPHA_LOWER:   'abcdefghijklmnopqrstuvwxyz',
+  ALPHA_UPPER:   'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  ALPHA:         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  ALPHA_NUMERIC: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+};
+function convert(input, source, target) {
+  var outarr = new Array();
+  var srcebase = source.length;
+  var trgbase = target.length;
+  var valsum=0;
+  for(var i = input.length-1;i>=0;i--){
+    var vabyde = source.indexOf(input[i]);
+    // inputvabyde.push(vabyde);
+    valsum+=vabyde*Math.pow(srcebase,(input.length-i-1));//calculate the value by decimal
+  }
+  if(valsum==0){
+    return target[valsum]+"";
+  }
+  while(valsum>0){
+    outarr.unshift(target[valsum%trgbase]);
+    valsum =parseInt(valsum/trgbase);
+
+  }
+
+  return outarr.join('');
+
+}
+//金字塔 最大和序列
+function longestSlideDown (pyramid) {
+  var sump = new Array();
+  var lastlayin = pyramid.length-1;
+  //creat sub array
+  for(var i=0;i<=lastlayin;i++){
+    sump[i]=new Array();
+  }
+  //copy the bottom
+  for(var j=0;j<pyramid[lastlayin].length;j++){
+    sump[lastlayin][j] = pyramid[lastlayin][j];
+  }
+  //sum to top
+  for(var i = pyramid.length-2;i>=0;i--){
+    for(var j =0;j< pyramid[i].length;j++){
+      sump[i][j]=pyramid[i][j]+Math.max(sump[i+1][j],sump[i+1][j+1]);
+    }
+  }
+  return sump[0][0];  
+}
+
+/**
+ * Constructor DependencyInjector
+ * @param {Object} - object with dependencies
+ */
+var DI = function (dependency) {
+  this.dependency = dependency;
+};
+
+// Should return new function with resolved dependencies
+DI.prototype.inject = function (func) {
+
+  // Your code goes here
+}
+
+function part(n) {
+  var partprod = new Array();
+  for(var i=1;i<=n;i++){
+    partprod[i] = new Array();
+  }
+  partprod[1].push(1);
+  var partres = partprodsolve(n);
+  var sum=0;
+  for(i=0;i<partres.length;i++){
+    sum+=partres[i];
+  }
+  var range = partres[partres.length-1]-partres[0];
+  var average = sum/(partres.length);
+  average=average.toFixed(2);
+  var medium;
+  if(partres.length%2==0){
+    medium=(partres[partres.length/2]+partres[partres.length/2-1])/2;
+    medium=medium.toFixed(2);
+  }else{
+    medium = partres[(partres.length-1)/2];
+    medium=medium.toFixed(2);
+  }
+  
+  return "Range: "+range+" Average: "+average+" Median: "+medium;
+  
+  function partprodsolve(num){
+    if(partprod[num].length>0){
+      return partprod[num];
+    }
+    for(var i=1;i<=num/2;i++){
+      var rpart = partprodsolve(i);
+      var lpart = partprodsolve(num-i);
+      for(var j =0;j<lpart.length;j++){
+        for(var k=0;k<rpart.length;k++){
+          // partprod[num].push(lpart[j]*rpart[k]);
+          insertbysort(partprod[num],lpart[j]*rpart[k]);
+        }
+      }
+    }
+    partprod[num].push(num);  
+    // partprod[num].sort(function(a,b){return a-b;});
+    // for(i=0;i<partprod[num].length;){
+    //   if(partprod[num][i]==partprod[num][i+1]){
+    //     partprod[num].splice(i+1,1);
+    //   }else{
+    //     i++;
+    //   }
+    // } 
+  //   console.log(partprod[num]);
+    return partprod[num];
+  }
+  function insertbysort(arr,m){
+    for(var i=0;i<arr;i++){
+      if(m==arr[i]){
+        break;
+      }
+      else if(m<arr[i]){
+        arr.splice(i,0,m);
+      }
+    }
+  }
+}
+
+function part(n) {
+  var partprod = new Array();
+  for(var i=1;i<=n;i++){
+    partprod[i] = new Array();
+  }
+  partprod[1].push(1);
+  var partres = partprodsolve(n);
+  var sum=0;
+  for(i=0;i<partres.length;i++){
+    sum+=partres[i];
+  }
+  var range = partres[partres.length-1]-partres[0];
+  var average = sum/(partres.length);
+  average=average.toFixed(2);
+  var medium;
+  if(partres.length%2==0){
+    medium=(partres[partres.length/2]+partres[partres.length/2-1])/2;
+    medium=medium.toFixed(2);
+  }else{
+    medium = partres[(partres.length-1)/2];
+    medium=medium.toFixed(2);
+  }
+  
+  return "Range: "+range+" Average: "+average+" Median: "+medium;
+  
+  function partprodsolve(num){
+  if(partprod[num].length>0){
+    return partprod[num];
+  }
+  for(var i=1;i<=num/2;i++){
+    var rpart = partprodsolve(i);
+    var lpart = partprodsolve(num-i);
+    for(var j =0;j<lpart.length;j++){
+      for(var k=0;k<rpart.length;k++){
+        partprod[num].push(lpart[j]*rpart[k]);
+      }
+    }
+  }
+  partprod[num].push(num);  
+  partprod[num].sort(function(a,b){return a-b;});
+  for(i=0;i<partprod[num].length;){
+    if(partprod[num][i]==partprod[num][i+1]){
+      partprod[num].splice(i+1,1);
+    }else{
+      i++;
+    }
+  } 
+//   console.log(partprod[num]);
+  return partprod[num];
+}
+
+
+}
+
+
+function removeNb (n) {
+  var kvs = new Array();
+  var nto1 = n*(n+1)/2;
+  for(var i =1;i<=n;i++){
+    if((nto1-i)%(i+1)==0){
+      var x = (nto1-i)/(i+1);
+      if(x>=1&&x<=n){
+        var kv = new Array();
+        kv.push(i);
+        kv.push(x);
+        kvs.push(kv);
+      }
+    }
+  }
+  return kvs;
+}
+
+function smallest(n) {
+  var sindex,tindex;
+  var str = n.toString();
+  var digits = str.split('');
+  for(var i=0;i<digits.length;i++){
+    digits[i] = parseInt(digits[i]);
+  }
+  minMove(0);
+  var moved = digits[sindex];
+  digits.splice(sindex,1);
+  digits.splice(tindex,0,moved);
+  str = digits.join('');
+  var result = new Array();
+  result.push(Number(str));
+  result.push(sindex);
+  result.push(tindex);
+  return result;
+
+  function minMove(start){
+    var min = digits[start];
+    for(var j=start+1;j<digits.length;j++){
+      if(digits[j]<min){
+        min = digits[j];
+      }
+    }
+    var minindexes = new Array();
+    for(j=start;j<digits.length;j++){
+      if(digits[j]==min){
+        minindexes.push(j);
+      }
+    }
+    var minif = minindexes[0];
+    var minil = minindexes[minindexes.length-1];
+    for(j=minindexes.length-2;j>=0;j--){
+      if(minil==minindexes[j]+1){
+        minil = minil-1;
+      }else{
+        break;
+      }
+    }
+    var minil = digits.lastIndexOf(min);
+    if(minif==start&&minif==minil){
+      minMove(start+1);
+    }else if(minif==start+1){
+      sindex=start;
+      for(j=start+1;j<digits.length;j++){
+        if(digits[j]>=digits[start]){
+          tindex = j-1;
+          break;
+        }else if(j==digits.length-1){
+          tindex = j;
+        }        
+      }
+    }else{
+      if(minil==minif+1){
+        sindex = minif;
+      }else{
+        sindex = minil;
+      }      
+      tindex = start;
+    }
+  }  
+}
+console.log()
+
+function smallest(n) {
+  var sindex,tindex;
+  var delcount =0;
+  //convert to str and array
+  var str = n.toString();
+  var srcd = str.split('');  
+  for(var i=0;i<srcd.length;i++){
+    srcd[i] = parseInt(srcd[i]);
+  }
+  var digits = srcd.concat();
+  
+  //delete the sorted numbers
+  var min=Math.min.apply(null,digits);
+  var lmin = findLastMinNotCon();
+  while(digits[0]==min){
+    if(lmin!=0){
+      sindex = lmin+delcount;
+      tindex = delcount;
+      break;
+    }
+    digits.shift();
+    delcount++;
+    min = Math.min.apply(null,digits);
+    lmin = findLastMinNotCon();
+  }
+  //全相同的返回原数
+  if(digits.length==0){
+    var result = new Array();
+    result.push(n);
+    result.push(sindex);
+    result.push(tindex);
+    return result; 
+  }
+  //select the d that need to move
+  var md;
+
+  if(sindex==undefined&&tindex==undefined){
+    //move the first big num when the second is min and the third less than first
+    if(digits[1]==min&&digits[2]<digits[0]){   
+      sindex = delcount;
+      var di = 1;
+      //choose the position to insert
+      for(i=2;i<digits.length;i++){
+        if(digits[i]>digits[0]){
+          di = i-1;
+          break;
+        }
+      }
+      if(i==digits.length){
+        di = i-1;
+      }
+      tindex = delcount+di;
+      md = digits[0];
+    }else{
+      //move the min
+      sindex = lmin+delcount;
+      tindex = delcount;
+      md = min;
+    }
+  }  
+  
+  srcd.splice(sindex,1);//在原来位置删除选中的数
+  srcd.splice(tindex,0,md);//在目标位置插入选中的数
+  str = srcd.join('');
+  var result = new Array();
+  result.push(Number(str));
+  result.push(sindex);
+  result.push(tindex);
+  return result;  
+
+  function findLastMinNotCon(){
+    //select the d that need to move
+    var lastMinNC = digits.lastIndexOf(min);
+    var md;
+    for(i=lastMinNC-1;i>=0;i--){
+      if(digits[i]==min){
+        lastMinNC--;
+      }else{
+        break;
+      }
+    }
+    return lastMinNC;
+  }
+
+}
+
+ // a year is 365 days and a day is 24 hours.1 hour is 60 minites,1minite is 60 seconds
+function formatDuration (seconds) {
+  console.log(seconds);
+  var units = new Array();
+  units.push(" second");
+  units.push(" minute");
+  units.push(" hour");
+  units.push(" day");
+  units.push(" year");
+
+  var time = new Array();
+  time.push(seconds%60);
+  var minites = parseInt(seconds/60);
+  time.push(minites%60);
+  var hours = parseInt(minites/60);
+  time.push(hours%24);
+  var days = parseInt(hours/24);
+  time.push(days%365);
+  var years = parseInt(days/365);
+  time.push(years);
+  var result="";
+  for(var i = time.length-1;i>=0;i--){
+    if(time[i]>0){
+      result+=", "+time[i]+units[i];
+      if(time[i]>1){
+        result+="s";
+      }
+    }
+  }
+  result = result.replace(", ","");
+  var lsin = result.lastIndexOf(", ");
+  if(lsin!=-1){
+      result = result.split("");
+      result.splice(lsin,2," and ");
+      result = result.join("");
+  }
+  if(result.length==0){
+    result+="now";
+  }
+  return result;
+}
+
+ // document.write(decodeMorse('.'));
+  // document.write(" E E".trim().split(" "));
+ // document.write(triangleType(7,12,8));
+ // document.write(getCount("abracadabra"));
+
+// document.write(goodVsEvil('1 1 1 1 1 1', '1 1 1 1 1 1 1'));
+// document.write(dirReduc(["NORTH", "SOUTH", "SOUTH", "EAST", "WEST", "NORTH", "WEST"]));
+document.write(add(1));
+
+</script>
